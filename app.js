@@ -1,8 +1,14 @@
 const express = require("express");
-const getTopics = require("./db/controllers/news-controllers");
+const {
+  getTopics,
+  getEndpoints,
+} = require("./db/controllers/news-controllers");
 const app = express();
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
+
+app.get("/api", getEndpoints);
 
 app.use((err, request, response, next) => {
   if (err.status && err.msg) {

@@ -1,4 +1,5 @@
-const selectTopics = require("../models/news-models");
+const { selectTopics } = require("../models/news-models");
+const endpoints = require("../../endpoints.json");
 
 const getTopics = (request, response, next) => {
   const { slug } = request.query;
@@ -11,4 +12,8 @@ const getTopics = (request, response, next) => {
     });
 };
 
-module.exports = getTopics;
+const getEndpoints = (request, response) => {
+  return response.status(200).send({ endpoints });
+};
+
+module.exports = { getTopics, getEndpoints };
