@@ -20,4 +20,10 @@ const selectTopics = (slug = null) => {
   });
 };
 
-module.exports = { selectTopics };
+const selectArticles = () => {
+  return db.query("SELECT * FROM articles;").then((result) => {
+    return result.rows;
+  });
+};
+
+module.exports = { selectTopics, selectArticles };

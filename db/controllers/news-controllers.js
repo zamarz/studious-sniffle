@@ -1,4 +1,4 @@
-const { selectTopics } = require("../models/news-models");
+const { selectTopics, selectArticles } = require("../models/news-models");
 const endpoints = require("../../endpoints.json");
 
 const getTopics = (request, response, next) => {
@@ -16,4 +16,10 @@ const getEndpoints = (request, response) => {
   return response.status(200).send({ endpoints });
 };
 
-module.exports = { getTopics, getEndpoints };
+const getArticles = (request, response) => {
+  selectArticles().then((articles) => {
+    response.status(200).send({ articles });
+  });
+};
+
+module.exports = { getTopics, getEndpoints, getArticles };
