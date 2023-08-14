@@ -1,0 +1,22 @@
+const db = require("../connection");
+
+const selectTopics = (slug = null) => {
+  const queryValues = [];
+
+  let baseSqlString = `SELECT * FROM topics `;
+
+  if (slug) {
+    baseSqlString += `WHERE slug = $1;`;
+    queryValues.push(slug);
+  }
+
+  return db.query(baseSqlString, queryValues).then((result) => {
+    if (result.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Resource not found" });
+    } else {
+      return result.rows;
+    }
+  });
+};
+
+module.exports = selectTopics;
