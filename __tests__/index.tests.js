@@ -26,6 +26,7 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then(({ body }) => {
         const { topics } = body;
+        expect(topics.length).toBe(3);
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug", expect.any(String));
           expect(topic).toHaveProperty("description", expect.any(String));
@@ -38,6 +39,7 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then(({ body }) => {
         const { topics } = body;
+        expect(topics.length).toBe(1);
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug", "paper");
         });
