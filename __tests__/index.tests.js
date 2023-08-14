@@ -100,6 +100,15 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/459")
       .expect(404)
       .then((response) => {
+        expect(response.body.msg).toBe("Not found");
+      });
+  });
+
+  test("GET: 400 article id has the wrong datatype", () => {
+    return request(app)
+      .get("/api/articles/chocolatecookies")
+      .expect(400)
+      .then((response) => {
         expect(response.body.msg).toBe("Bad request");
       });
   });
