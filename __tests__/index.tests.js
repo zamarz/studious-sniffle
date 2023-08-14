@@ -56,7 +56,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe.only("GET /api", () => {
+describe("GET /api", () => {
   test("GET: 200 sends a json representation of all the available endpoints", () => {
     return request(app)
       .get("/api")
