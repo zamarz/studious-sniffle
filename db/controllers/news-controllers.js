@@ -3,7 +3,7 @@ const {
   findArticle,
   findComments,
   checkArticleID,
-} = require("../models/news-models");
+} = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
 const getTopics = (request, response, next) => {
