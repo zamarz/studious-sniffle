@@ -139,9 +139,19 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         const { comments } = body;
-        expect(comments).toBeSortedBy("created_at");
+        expect(comments).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("Get:200 article exists but there are no comments and responds with empty array", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toEqual([]);
+      });
+  });
+
   test("GET: 404 displays correct error message if article_id does not exist", () => {
     return request(app)
       .get("/api/articles/499/comments")

@@ -2,6 +2,7 @@ const {
   selectTopics,
   findArticle,
   findComments,
+  checkArticleID,
 } = require("../models/news-models");
 const endpoints = require("../../endpoints.json");
 
@@ -33,9 +34,17 @@ const getArticle = (request, response, next) => {
 
 const getComments = (request, response, next) => {
   const { article_id } = request.params;
-  findComments(article_id)
-    .then((comments) => {
-      response.status(200).send({ comments });
+
+  const promises = [findComments(article_id)];
+
+  if (article_id) {
+    promises.push(checkArticleID(article_id));
+  }
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const comments = resolvedPromises[0];
+      response.status(200).send({ comments: comments });
     })
     .catch((err) => {
       next(err);
