@@ -3,6 +3,7 @@ const {
   findArticle,
   findComments,
   checkArticleID,
+  selectArticles,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
@@ -21,7 +22,18 @@ const getEndpoints = (request, response) => {
   return response.status(200).send({ endpoints });
 };
 
-const getArticle = (request, response, next) => {
+const getArticles = (request, response, next) => {
+  const { order_by } = request.query;
+  selectArticles(order_by)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const searchArticle = (request, response, next) => {
   const { article_id } = request.params;
   findArticle(article_id)
     .then((article) => {
@@ -51,4 +63,10 @@ const getComments = (request, response, next) => {
     });
 };
 
-module.exports = { getTopics, getEndpoints, getArticle, getComments };
+module.exports = {
+  getTopics,
+  getEndpoints,
+  getArticles,
+  getComments,
+  searchArticle,
+};
