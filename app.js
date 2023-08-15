@@ -3,6 +3,7 @@ const {
   getTopics,
   getEndpoints,
   getArticles,
+  getComments,
   searchArticle,
 } = require("./db/controllers/news-controllers");
 const app = express();
@@ -14,6 +15,8 @@ app.get("/api", getEndpoints);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", searchArticle);
+
+app.get("/api/articles/:article_id/comments", getComments);
 
 app.use((err, request, response, next) => {
   if (err.code === "22P02") {
