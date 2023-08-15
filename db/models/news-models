@@ -23,7 +23,7 @@ const selectTopics = (slug = null) => {
 const selectArticles = () => {
   return (
     db
-      .query(`SELECT * FROM articles INNER JOIN comments;`)
+      .query(`SELECT * FROM articles;`)
       //work on this here, consult notes
       .then((result) => {
         return result.rows;
