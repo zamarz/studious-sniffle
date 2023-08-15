@@ -68,6 +68,50 @@ describe("GET /api", () => {
   });
 });
 
+describe("GET /api/articles", () => {
+  test("GET: 200 responds with an array of articles with the correct properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+
+        expect(articles.length).toBe(5);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("author", expect.any(String));
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("article_id", expect.any(Number));
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+          expect(article).toHaveProperty("comment_count", expect.any(String));
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+
+  test("GET: 200 ensure articles are ordered by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("GET: 400 ensure articles cannot be ordered in an unacceptable way(not asc or desc)", () => {
+    return request(app)
+      .get("/api/articles?order_by=pineapple")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id", () => {
   test("GET: 200 gets an article by its id with the correct properties", () => {
     return request(app)

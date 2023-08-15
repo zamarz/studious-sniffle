@@ -1,4 +1,9 @@
-const { selectTopics, findArticle } = require("../models/news-models");
+const {
+  selectTopics,
+  selectArticles,
+  findArticle,
+} = require("../models/news-models");
+
 const endpoints = require("../../endpoints.json");
 
 const getTopics = (request, response, next) => {
@@ -16,7 +21,18 @@ const getEndpoints = (request, response) => {
   return response.status(200).send({ endpoints });
 };
 
-const getArticle = (request, response, next) => {
+const getArticles = (request, response, next) => {
+  const { order_by } = request.query;
+  selectArticles(order_by)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const searchArticle = (request, response, next) => {
   const { article_id } = request.params;
   findArticle(article_id)
     .then((article) => {
@@ -27,4 +43,4 @@ const getArticle = (request, response, next) => {
     });
 };
 
-module.exports = { getTopics, getEndpoints, getArticle };
+module.exports = { getTopics, getEndpoints, searchArticle, getArticles };
