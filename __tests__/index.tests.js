@@ -75,9 +75,8 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        console.log(articles);
 
-        expect(articles.length).toBe(13);
+        expect(articles.length).toBe(5);
         articles.forEach((article) => {
           expect(article).toHaveProperty("author", expect.any(String));
           expect(article).toHaveProperty("title", expect.any(String));
@@ -86,12 +85,29 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("created_at", expect.any(String));
           expect(article).toHaveProperty("votes", expect.any(Number));
           expect(article).toHaveProperty("article_img_url", expect.any(String));
-          // expect(article).toHaveProperty("comment_count", expect.any(Number));
+          expect(article).toHaveProperty("comment_count", expect.any(String));
+          expect(article).not.toHaveProperty("body");
         });
       });
   });
-  //can use SUM thing in notes
-  //test for descending order by checking first one
-  //test for no body property
-  //test for errors?
+
+  test("GET: 200 ensure articles are ordered by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("GET: 400 ensure articles cannot be ordered in an unacceptable way(not asc or desc)", () => {
+    return request(app)
+      .get("/api/articles?order_by=pineapple")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
 });

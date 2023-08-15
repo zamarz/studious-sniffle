@@ -16,10 +16,15 @@ const getEndpoints = (request, response) => {
   return response.status(200).send({ endpoints });
 };
 
-const getArticles = (request, response) => {
-  selectArticles().then((articles) => {
-    response.status(200).send({ articles });
-  });
+const getArticles = (request, response, next) => {
+  const { order_by } = request.query;
+  selectArticles(order_by)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = { getTopics, getEndpoints, getArticles };
