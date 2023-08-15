@@ -20,6 +20,18 @@ const selectTopics = (slug = null) => {
   });
 };
 
+const findArticle = (article_id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return result.rows[0];
+      }
+    });
+};
+
 const selectArticles = (order_by = "desc") => {
   const acceptedOrders = ["desc", "asc"];
 
@@ -38,4 +50,4 @@ const selectArticles = (order_by = "desc") => {
     });
 };
 
-module.exports = { selectTopics, selectArticles };
+module.exports = { selectTopics, selectArticles, findArticle };
