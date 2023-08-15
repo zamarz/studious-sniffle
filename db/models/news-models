@@ -21,9 +21,14 @@ const selectTopics = (slug = null) => {
 };
 
 const selectArticles = () => {
-  return db.query("SELECT * FROM articles;").then((result) => {
-    return result.rows;
-  });
+  return (
+    db
+      .query(`SELECT * FROM articles INNER JOIN comments;`)
+      //work on this here, consult notes
+      .then((result) => {
+        return result.rows;
+      })
+  );
 };
 
 module.exports = { selectTopics, selectArticles };
