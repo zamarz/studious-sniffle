@@ -68,4 +68,28 @@ const checkArticleID = (article_id) => {
     });
 };
 
-module.exports = { selectTopics, findArticle, findComments, checkArticleID };
+const selectArticles = (order_by = "desc") => {
+  const acceptedOrders = ["desc", "asc"];
+
+  if (!acceptedOrders.includes(order_by)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return db
+    .query(
+      `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles
+      JOIN comments ON comments.article_id = articles.article_id
+      GROUP BY articles.article_id ORDER BY created_at ${order_by};`
+    )
+    .then((result) => {
+      return result.rows;
+    });
+};
+
+module.exports = {
+  selectTopics,
+  findArticle,
+  findComments,
+  checkArticleID,
+  selectArticles,
+};
