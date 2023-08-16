@@ -1,5 +1,6 @@
 const db = require("../connection");
 const endpoints = require("../../endpoints.json");
+const { articleData } = require("../data/test-data");
 
 const selectTopics = (slug = null) => {
   const queryValues = [];
@@ -90,11 +91,26 @@ const patchArticle = (inc_votes, article_id) => {
   if (!inc_votes) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
-
   return db
     .query(
       `UPDATE articles SET votes = votes + ${inc_votes} WHERE article_id = $1 RETURNING *;`,
       [article_id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
+const insertComment = (author, body, article_id) => {
+  if (!author || !body) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return db
+    .query(
+      `INSERT INTO comments(author, body, article_id)
+  VALUES ($1, $2, $3) RETURNING *;`,
+      [author, body, article_id]
     )
     .then((result) => {
       return result.rows[0];
@@ -108,4 +124,5 @@ module.exports = {
   checkArticleID,
   selectArticles,
   patchArticle,
+  insertComment,
 };

@@ -5,6 +5,7 @@ const {
   checkArticleID,
   selectArticles,
   patchArticle,
+  insertComment,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
@@ -85,6 +86,26 @@ const patchVote = (request, response, next) => {
     });
 };
 
+const postComment = (request, response, next) => {
+  const { article_id } = request.params;
+  const { author, body } = request.body;
+
+  const promises = [insertComment(author, body, article_id)];
+
+  if (article_id) {
+    promises.push(checkArticleID(article_id));
+  }
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const newComment = resolvedPromises[0];
+      response.status(201).send({ comment: newComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getEndpoints,
@@ -92,4 +113,5 @@ module.exports = {
   getComments,
   searchArticle,
   patchVote,
+  postComment,
 };

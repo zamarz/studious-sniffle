@@ -52,5 +52,16 @@
       "created_at": "2020-11-03T09:12:00.000Z",
       "votes": 0
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "POSTS a new comment for a specific article",
+    "queries": [":article_id"],
+    "exampleResponse": {
+      "comment_id": 19,
+      "body": "hey am I on the right site?",
+      "article_id": 9,
+      "author": "icellusedkars",
+      "votes": 0
+    }
   }
 }
