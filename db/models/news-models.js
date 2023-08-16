@@ -86,10 +86,22 @@ const selectArticles = (order_by = "desc") => {
     });
 };
 
+const patchArticle = (inc_votes, article_id) => {
+  return db
+    .query(
+      `UPDATE articles SET votes = votes + ${inc_votes} WHERE article_id = $1 RETURNING *;`,
+      [article_id]
+    )
+    .then((result) => {
+      return result.rows;
+    });
+};
+
 module.exports = {
   selectTopics,
   findArticle,
   findComments,
   checkArticleID,
   selectArticles,
+  patchArticle,
 };
