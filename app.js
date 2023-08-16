@@ -5,6 +5,7 @@ const {
   getArticles,
   getComments,
   searchArticle,
+  patchVote,
   postComment,
 } = require("./db/controllers/news-controllers");
 const app = express();
@@ -20,10 +21,11 @@ app.get("/api/articles/:article_id", searchArticle);
 
 app.get("/api/articles/:article_id/comments", getComments);
 
+app.patch("/api/articles/:article_id", patchVote);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.use((err, request, response, next) => {
-  if (err.code === "22P02") {
+  if (err.code === "22P02" || err.code === "42703") {
     response.status(400).send({ msg: "Bad request" });
   } else {
     next(err);
