@@ -64,7 +64,7 @@ const getComments = (request, response, next) => {
     });
 };
 
-const patchVote = (request, response, err) => {
+const patchVote = (request, response, next) => {
   const { inc_votes } = request.body;
 
   const { article_id } = request.params;

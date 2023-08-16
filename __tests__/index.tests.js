@@ -238,6 +238,29 @@ describe("PATCH: /api/articles/:article_id", () => {
       });
   });
 
+  test("PATCH:200 ensure updated article contains correct properties", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+
+        expect(Object.keys(article[0])).toHaveLength(8);
+        expect(article[0]).toHaveProperty("article_id", expect.any(Number));
+        expect(article[0]).toHaveProperty("title", expect.any(String));
+        expect(article[0]).toHaveProperty("topic", expect.any(String));
+        expect(article[0]).toHaveProperty("author", expect.any(String));
+        expect(article[0]).toHaveProperty("body", expect.any(String));
+        expect(article[0]).toHaveProperty("created_at", expect.any(String));
+        expect(article[0]).toHaveProperty("votes", expect.any(Number));
+        expect(article[0]).toHaveProperty(
+          "article_img_url",
+          expect.any(String)
+        );
+      });
+  });
+
   test("PATCH:200 decreases the votes property of an article and responds with the updated article", () => {
     return request(app)
       .patch("/api/articles/1")
@@ -258,6 +281,39 @@ describe("PATCH: /api/articles/:article_id", () => {
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
           },
         ]);
+      });
+  });
+
+  test("PATCH:404 article id does not exist and returns error message", () => {
+    return request(app)
+      .patch("/api/articles/576")
+      .send({ inc_votes: -5 })
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not found");
+      });
+  });
+
+  test("PATCH:400 displays correct error message if wrong data type used", () => {
+    return request(app)
+      .patch("/api/articles/empanadas")
+      .send({ inc_votes: -5 })
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("PATCH:400 displays correct error message if nothing sent in PATCH message", () => {
+    return request(app)
+      .patch("/api/articles/9")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
       });
   });
 });
