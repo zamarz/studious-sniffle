@@ -180,6 +180,22 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 
+  test("POST: 201 adds a comment to an article", () => {
+    const newComment = {
+      author: "icellusedkars",
+      body: "hey am I on the right site?",
+      otherProperty: "allignored",
+    };
+    return request(app)
+      .post("/api/articles/9/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).not.toHaveProperty("otherProperty");
+      });
+  });
+
   test("POST: 201 adds a comment to an article and returns comment with specific properties", () => {
     const newComment = {
       author: "icellusedkars",
