@@ -88,6 +88,10 @@ const selectArticles = (order_by = "desc") => {
 };
 
 const insertComment = (author, body, article_id) => {
+  if (!author || !body) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
   return db
     .query(
       `INSERT INTO comments(author, body, article_id)

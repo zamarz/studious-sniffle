@@ -179,7 +179,42 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("POST: 400 article id does not exist and returns an error message", () => {
+
+  test("POST: 201 adds a comment to an article and returns comment with specific properties", () => {
+    const newComment = {
+      author: "icellusedkars",
+      body: "hey am I on the right site?",
+    };
+    return request(app)
+      .post("/api/articles/9/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(Object.keys(comment)).toHaveLength(6);
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+        expect(comment).toHaveProperty("body", expect.any(String));
+        expect(comment).toHaveProperty("article_id", expect.any(Number));
+        expect(comment).toHaveProperty("author", expect.any(String));
+        expect(comment).toHaveProperty("created_at", expect.any(String));
+        expect(comment).toHaveProperty("votes", expect.any(Number));
+      });
+  });
+
+  test("POST: 400 new comment object is missing a required field", () => {
+    const newComment = {
+      body: "hey am I on the right site?",
+    };
+    return request(app)
+      .post("/api/articles/9/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("POST: 404 article id does not exist and returns an error message", () => {
     const newComment = {
       author: "icellusedkars",
       body: "hey am I on the right site?",
@@ -187,9 +222,9 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/579/comments")
       .send(newComment)
-      .expect(400)
+      .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("Bad request");
+        expect(response.body.msg).toBe("Not found");
       });
   });
 
@@ -204,6 +239,20 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad request");
+      });
+  });
+
+  test("POST: 404 username does not exist", () => {
+    const newComment = {
+      author: "elgato",
+      body: "hey am I on the right site?",
+    };
+    return request(app)
+      .post("/api/articles/9/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not found");
       });
   });
 });
