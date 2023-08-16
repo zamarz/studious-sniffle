@@ -90,13 +90,14 @@ const patchArticle = (inc_votes, article_id) => {
   if (!inc_votes) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
+
   return db
     .query(
       `UPDATE articles SET votes = votes + ${inc_votes} WHERE article_id = $1 RETURNING *;`,
       [article_id]
     )
     .then((result) => {
-      return result.rows;
+      return result.rows[0];
     });
 };
 
