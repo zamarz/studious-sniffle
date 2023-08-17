@@ -492,3 +492,66 @@ describe("FEATURE: GET /api/articles (queries)", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("DELETE: 204 deletes a comment correctly", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("DELETE: 404 responds with error message if id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("DELETE: 400 responds with error message if data type for id is wrong", () => {
+    return request(app)
+      .delete("/api/comments/starfish")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("DELETE: 204 ensures no content is sent back", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("GET:200 returns all users with specific properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(users).toHaveLength(4);
+
+        users.forEach((user) => {
+          expect(user).toHaveProperty("username", expect.any(String));
+          expect(user).toHaveProperty("name", expect.any(String));
+          expect(user).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
+  });
+
+  test("GET:200 returns an array", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(users).toEqual(expect.any(Array));
+        expect(Object.keys(users[0])).toEqual(
+          expect.arrayContaining(["username", "name", "avatar_url"])
+        );
+      });
+  });
+});

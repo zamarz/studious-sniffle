@@ -148,6 +148,36 @@ const insertComment = (author, body, article_id) => {
     });
 };
 
+const removeComment = (comment_id) => {
+  if (!comment_id) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [
+      comment_id,
+    ])
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
+const checkCommentID = (comment_id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE comment_id = $1;`, [comment_id])
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    });
+};
+
+const selectUsers = () => {
+  return db.query(`SELECT * FROM users;`).then((result) => {
+    return result.rows;
+  });
+};
+
 module.exports = {
   selectTopics,
   findArticle,
@@ -157,4 +187,7 @@ module.exports = {
   patchArticle,
   insertComment,
   checkTopic,
+  removeComment,
+  checkCommentID,
+  selectUsers,
 };
