@@ -380,3 +380,108 @@ describe("PATCH: /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("FEATURE: GET /api/articles (queries)", () => {
+  test("GET: 200 can filter the endpoint by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles.length).toBe(4);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty(
+            "title",
+            "topic",
+            "author",
+            "created_at",
+            "article_img_url",
+            "article_id",
+            "votes",
+            "comment_count"
+          );
+          expect(Object.keys(article)).toHaveLength(8);
+        });
+      });
+  });
+  test("GET: 404 warns user that the topic doesn't exist", () => {
+    return request(app)
+      .get("/api/articles?topic=chocolate")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not found");
+      });
+  });
+  test("GET: 200 responds with all articles if query is omitted", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+
+        expect(articles.length).toBe(5);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("author", expect.any(String));
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("article_id", expect.any(Number));
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+          expect(article).toHaveProperty("comment_count", expect.any(String));
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+  test("GET: 200 sorts the articles by author column descending by default", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  test("GET: 200 sorts the articles by votes column and order ascending", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order_by=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("votes");
+      });
+  });
+  test("GET: 200 sorts the articles by votes column and order is descending by default", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("GET: 400 returns an error message if sort_by is unacceptable", () => {
+    return request(app)
+      .get("/api/articles?sort_by=passwords")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 400 returns an error message if order_by is unacceptable", () => {
+    return request(app)
+      .get("/api/articles?order_by=passwords")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 400 returns an error message if either sort_by or order_by are unacceptable", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order_by=passwords")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+});

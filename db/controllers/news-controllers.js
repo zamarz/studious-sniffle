@@ -5,6 +5,7 @@ const {
   checkArticleID,
   selectArticles,
   patchArticle,
+  checkTopic,
   insertComment,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
@@ -25,9 +26,17 @@ const getEndpoints = (request, response) => {
 };
 
 const getArticles = (request, response, next) => {
-  const { order_by } = request.query;
-  selectArticles(order_by)
-    .then((articles) => {
+  const { order_by, sort_by, topic } = request.query;
+
+  const promises = [selectArticles(order_by, sort_by, topic)];
+
+  if (topic) {
+    promises.push(checkTopic(topic));
+  }
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const articles = resolvedPromises[0];
       response.status(200).send({ articles });
     })
     .catch((err) => {

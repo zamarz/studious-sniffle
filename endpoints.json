@@ -63,5 +63,19 @@
       "author": "icellusedkars",
       "votes": 0
     }
+  },
+  "FEATURE: GET /api/articles (queries)": {
+    "description": "Endpoint can receive additional queries to filter information by",
+    "queries": ["topic", "sort_by", "order"],
+    "exampleResponse": {
+      "article_id": 9,
+      "title": "They're not exactly dogs, are they?",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "created_at": "2020-06-06T09:10:00.000Z",
+      "votes": 0,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      "comment_count": "2"
+    }
   }
 }
