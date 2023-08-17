@@ -390,16 +390,14 @@ describe("FEATURE: GET /api/articles (queries)", () => {
         const { articles } = body;
         expect(articles.length).toBe(4);
         articles.forEach((article) => {
-          expect(article).toHaveProperty(
-            "title",
-            "topic",
-            "author",
-            "created_at",
-            "article_img_url",
-            "article_id",
-            "votes",
-            "comment_count"
-          );
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("topic", "mitch");
+          expect(article).toHaveProperty("author", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+          expect(article).toHaveProperty("article_id", expect.any(Number));
+          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("comment_count", expect.any(String));
           expect(Object.keys(article)).toHaveLength(8);
         });
       });
@@ -412,6 +410,15 @@ describe("FEATURE: GET /api/articles (queries)", () => {
         expect(response.body.msg).toBe("Not found");
       });
   });
+  test("GET: 400 returns an error message if topic is valid but contains no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+
   test("GET: 200 responds with all articles if query is omitted", () => {
     return request(app)
       .get("/api/articles")

@@ -37,7 +37,11 @@ const getArticles = (request, response, next) => {
   Promise.all(promises)
     .then((resolvedPromises) => {
       const articles = resolvedPromises[0];
-      response.status(200).send({ articles });
+      if (articles.length === 0) {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      } else {
+        response.status(200).send({ articles });
+      }
     })
     .catch((err) => {
       next(err);
