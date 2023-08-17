@@ -6,6 +6,8 @@ const {
   selectArticles,
   patchArticle,
   insertComment,
+  checkCommentID,
+  removeComment,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
@@ -106,6 +108,24 @@ const postComment = (request, response, next) => {
     });
 };
 
+const deleteComment = (request, response, next) => {
+  const { comment_id } = request.params;
+
+  const promises = [removeComment(comment_id)];
+
+  if (comment_id) {
+    promises.push(checkCommentID(comment_id));
+  }
+
+  Promise.all(promises)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getEndpoints,
@@ -114,4 +134,5 @@ module.exports = {
   searchArticle,
   patchVote,
   postComment,
+  deleteComment,
 };
