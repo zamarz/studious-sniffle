@@ -5,6 +5,7 @@ const {
   checkArticleID,
   selectArticles,
   patchArticle,
+  checkTopic,
   insertComment,
   checkCommentID,
   removeComment,
@@ -28,10 +29,22 @@ const getEndpoints = (request, response) => {
 };
 
 const getArticles = (request, response, next) => {
-  const { order_by } = request.query;
-  selectArticles(order_by)
-    .then((articles) => {
-      response.status(200).send({ articles });
+  const { order_by, sort_by, topic } = request.query;
+
+  const promises = [selectArticles(order_by, sort_by, topic)];
+
+  if (topic) {
+    promises.push(checkTopic(topic));
+  }
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const articles = resolvedPromises[0];
+      if (articles.length === 0) {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      } else {
+        response.status(200).send({ articles });
+      }
     })
     .catch((err) => {
       next(err);

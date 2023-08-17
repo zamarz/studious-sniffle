@@ -69,21 +69,52 @@ const checkArticleID = (article_id) => {
     });
 };
 
-const selectArticles = (order_by = "desc") => {
+const selectArticles = (
+  order_by = "desc",
+  sort_by = "created_at",
+  topic = null
+) => {
   const acceptedOrders = ["desc", "asc"];
+  const acceptedSorts = [
+    "created_at",
+    "author",
+    "title",
+    "topic",
+    "votes",
+    "article_id",
+    "article_img_url",
+  ];
+  const queryValues = [];
 
   if (!acceptedOrders.includes(order_by)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
+  if (!acceptedSorts.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  let baseSqlString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id `;
+
+  if (topic) {
+    baseSqlString += `WHERE topic = $1 `;
+    queryValues.push(topic);
+  }
+
+  baseSqlString += `GROUP BY articles.article_id ORDER BY ${sort_by} ${order_by};`;
+
+  return db.query(baseSqlString, queryValues).then((result) => {
+    return result.rows;
+  });
+};
+
+const checkTopic = (topic) => {
   return db
-    .query(
-      `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles
-      JOIN comments ON comments.article_id = articles.article_id
-      GROUP BY articles.article_id ORDER BY created_at ${order_by};`
-    )
-    .then((result) => {
-      return result.rows;
+    .query(`SELECT * FROM topics WHERE slug = $1;`, [topic])
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
     });
 };
 
@@ -155,6 +186,7 @@ module.exports = {
   selectArticles,
   patchArticle,
   insertComment,
+  checkTopic,
   removeComment,
   checkCommentID,
   selectUsers,

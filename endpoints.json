@@ -64,34 +64,48 @@
       "votes": 0
     }
   },
-  "PATCH /api/articles/:article_id": {
-    "description": "Updates an article's vote property by a specific amount",
-    "queries": [":article_id"],
+  "FEATURE: GET /api/articles (queries)": {
+    "description": "Endpoint can receive additional queries to filter information by",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
-      "article_id": 1,
-      "title": "Living in the shadow of a great man",
+      "article_id": 9,
+      "title": "They're not exactly dogs, are they?",
       "topic": "mitch",
       "author": "butter_bridge",
-      "body": "I find this existence challenging",
-      "created_at": "2020-07-09T20:11:00.000Z",
-      "votes": 95,
-      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-    }
-  },
-  "DELETE /api/comments/:comment_id": {
-    "description": "Deletes a given coment by comment_id",
-    "queries": [":comment_id"],
-    "exampleResponse": {
-      "status": 204
-    }
-  },
-  "GET /api/users": {
-    "description": "serves an array of all users",
-    "queries": [],
-    "exampleResponse": {
-      "username": "lurker",
-      "name": "do_nothing",
-      "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+      "created_at": "2020-06-06T09:10:00.000Z",
+      "votes": 0,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      "comment_count": "2"
+    },
+    "PATCH /api/articles/:article_id": {
+      "description": "Updates an article's vote property by a specific amount",
+      "queries": [":article_id"],
+      "exampleResponse": {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 95,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
+    },
+    "DELETE /api/comments/:comment_id": {
+      "description": "Deletes a given coment by comment_id",
+      "queries": [":comment_id"],
+      "exampleResponse": {
+        "status": 204
+      }
+    },
+    "GET /api/users": {
+      "description": "serves an array of all users",
+      "queries": [],
+      "exampleResponse": {
+        "username": "lurker",
+        "name": "do_nothing",
+        "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+      }
     }
   }
 }
