@@ -64,5 +64,34 @@
       "votes": 0
     }
   },
-  "Add PATCH": "New patch"
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates an article's vote property by a specific amount",
+    "queries": [":article_id"],
+    "exampleResponse": {
+      "article_id": 1,
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "I find this existence challenging",
+      "created_at": "2020-07-09T20:11:00.000Z",
+      "votes": 95,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a given coment by comment_id",
+    "queries": [":comment_id"],
+    "exampleResponse": {
+      "status": 204
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "username": "lurker",
+      "name": "do_nothing",
+      "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+    }
+  }
 }
