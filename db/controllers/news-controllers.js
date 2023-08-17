@@ -8,6 +8,7 @@ const {
   insertComment,
   checkCommentID,
   removeComment,
+  selectUsers,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
@@ -126,6 +127,12 @@ const deleteComment = (request, response, next) => {
     });
 };
 
+const getUsers = (request, response) => {
+  selectUsers().then((users) => {
+    response.status(200).send({ users });
+  });
+};
+
 module.exports = {
   getTopics,
   getEndpoints,
@@ -135,4 +142,5 @@ module.exports = {
   patchVote,
   postComment,
   deleteComment,
+  getUsers,
 };
