@@ -591,3 +591,92 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("PATCH:200 increases votes on a given comment's comment_id", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(Object.keys(comment)).toHaveLength(6);
+        expect(comment).toMatchObject({
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          votes: 21,
+          author: "butter_bridge",
+          article_id: 9,
+        });
+      });
+  });
+  test("PATCH:200 decreases votes on a given comment's comment_id", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(Object.keys(comment)).toHaveLength(6);
+        expect(comment).toMatchObject({
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          votes: 11,
+          author: "butter_bridge",
+          article_id: 9,
+        });
+      });
+  });
+  test("PATCH:200 ensures the returned comment has the correct properties", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toHaveProperty("article_id", expect.any(Number));
+        expect(comment).toHaveProperty("body", expect.any(String));
+        expect(comment).toHaveProperty("votes", expect.any(Number));
+        expect(comment).toHaveProperty("author", expect.any(String));
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+      });
+  });
+  test("PATCH:404 article id does not exist and returns error message", () => {
+    return request(app)
+      .patch("/api/comments/453261")
+      .send({ inc_votes: -5 })
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("PATCH:400 displays correct error message if comment_id is in wrong format", () => {
+    return request(app)
+      .patch("/api/comments/catsarecool")
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("PATCH:400 displays correct error message if nothing sent in PATCH send message", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("PATCH:400 displays correct error message if PATCH vote change property is not a number", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: "tunapizza" })
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
