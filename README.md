@@ -18,9 +18,9 @@ How to create the two .env files:
 To have access to the correct environment variables, make sure you add a .env.test and .env.development file to your repo. In each of these set PGDATABASE to either the test (for example, PGDATABASE=nc_news_test) or development database. This should successfully connect to the two databases locally. Ensure the two files are in your .gitignore too.
 
 # Minimum versions needed to run the project
-Node.js:
+Node.js: 9.6.6
 
-Postgres:
+Postgres: 15.4
 
 # Seeding the local database
 After ensuring you have all the dependencies you need installed, you can seed the database. Run npm run setup-dbs to set up the initial database on your local system.
