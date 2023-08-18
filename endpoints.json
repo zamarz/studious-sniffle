@@ -76,36 +76,70 @@
       "votes": 0,
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       "comment_count": "2"
-    },
-    "PATCH /api/articles/:article_id": {
-      "description": "Updates an article's vote property by a specific amount",
-      "queries": [":article_id"],
-      "exampleResponse": {
-        "article_id": 1,
-        "title": "Living in the shadow of a great man",
-        "topic": "mitch",
-        "author": "butter_bridge",
-        "body": "I find this existence challenging",
-        "created_at": "2020-07-09T20:11:00.000Z",
-        "votes": 95,
-        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-      }
-    },
-    "DELETE /api/comments/:comment_id": {
-      "description": "Deletes a given coment by comment_id",
-      "queries": [":comment_id"],
-      "exampleResponse": {
-        "status": 204
-      }
-    },
-    "GET /api/users": {
-      "description": "serves an array of all users",
-      "queries": [],
-      "exampleResponse": {
-        "username": "lurker",
-        "name": "do_nothing",
-        "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
-      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates an article's vote property by a specific amount",
+    "queries": [":article_id"],
+    "exampleResponse": {
+      "article_id": 1,
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "I find this existence challenging",
+      "created_at": "2020-07-09T20:11:00.000Z",
+      "votes": 95,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a given coment by comment_id",
+    "queries": [":comment_id"],
+    "exampleResponse": {
+      "status": 204
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "username": "lurker",
+      "name": "do_nothing",
+      "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "searches for a user and returns their information",
+    "queries": [":username"],
+    "exampleResponse": {
+      "username": "lurker",
+      "name": "do_nothing",
+      "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "Updates a specific comment's vote property by a specific amount",
+    "queries": [":comment_id"],
+    "exampleResponse": {
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 21,
+      "author": "butter_bridge",
+      "article_id": 9,
+      "created_at": "1586179020000"
+    }
+  },
+  "POST /api/articles": {
+    "description": "POSTS a new article",
+    "queries": [],
+    "exampleResponse": {
+      "article_id": 14,
+      "title": "For whom the bell tolls",
+      "topic": "mitch",
+      "author": "rogersop",
+      "body": "It tolls for you, it tolls for me",
+      "created_at": "2023-08-18T15:05:27.961Z",
+      "votes": 0,
+      "article_img_url": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-EPbnOKgFNdA%2FUYKY910IyjI%2FAAAAAAAAAZ0%2F9R7ZK6R1yqk%2Fs1600%2Ffor-whom-the-bell-tolls.jpg&f=1&nofb=1&ipt=70087b0110a227f7b96b7d2cb8d41697f80ee0b43830ad7dbe64ff7fa1235525&ipo=images"
     }
   }
 }

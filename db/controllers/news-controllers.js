@@ -7,8 +7,7 @@ const {
   patchArticle,
   checkTopic,
   insertComment,
-  checkCommentID,
-  removeComment,
+  insertArticle,
 } = require("../models/news-models.js");
 const endpoints = require("../../endpoints.json");
 
@@ -121,6 +120,18 @@ const postComment = (request, response, next) => {
     });
 };
 
+const postArticle = (request, response, next) => {
+  const { author, title, body, topic, article_img_url } = request.body;
+
+  insertArticle(author, title, body, topic, article_img_url)
+    .then((article) => {
+      response.status(201).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getEndpoints,
@@ -129,4 +140,5 @@ module.exports = {
   searchArticle,
   patchVote,
   postComment,
+  postArticle,
 };

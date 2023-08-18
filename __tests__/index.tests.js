@@ -680,3 +680,74 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("POST /api/articles", () => {
+  test("POST: 201 can post a new article and respond with the newly added article", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "rogersop",
+        title: "For whom the bell tolls",
+        body: "It tolls for you, it tolls for me",
+        topic: "mitch",
+        article_img_url:
+          "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-EPbnOKgFNdA%2FUYKY910IyjI%2FAAAAAAAAAZ0%2F9R7ZK6R1yqk%2Fs1600%2Ffor-whom-the-bell-tolls.jpg&f=1&nofb=1&ipt=70087b0110a227f7b96b7d2cb8d41697f80ee0b43830ad7dbe64ff7fa1235525&ipo=images",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(Object.keys(article)).toHaveLength(8); //missing comment_count
+        expect(article).toHaveProperty("article_id", expect.any(Number));
+        expect(article).toHaveProperty("author", expect.any(String));
+        expect(article).toHaveProperty("topic", expect.any(String));
+        expect(article).toHaveProperty("body", expect.any(String));
+        expect(article).toHaveProperty("article_img_url", expect.any(String));
+        expect(article).toHaveProperty("votes", expect.any(Number));
+        expect(article).toHaveProperty("created_at", expect.any(String));
+        expect(article).toHaveProperty("title", expect.any(String));
+      });
+  });
+  test("POST: 400 returns error if object being sent is missing information", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "rogersop",
+        body: "It tolls for you, it tolls for me",
+        topic: "mitch",
+        article_img_url:
+          "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-EPbnOKgFNdA%2FUYKY910IyjI%2FAAAAAAAAAZ0%2F9R7ZK6R1yqk%2Fs1600%2Ffor-whom-the-bell-tolls.jpg&f=1&nofb=1&ipt=70087b0110a227f7b96b7d2cb8d41697f80ee0b43830ad7dbe64ff7fa1235525&ipo=images",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("POST: 400 returns error if object is empty", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("POST: 404 returns an error if author is not on database", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "elgatonegro",
+        title: "For whom the bell tolls",
+        body: "It tolls for you, it tolls for me",
+        topic: "mitch",
+        article_img_url:
+          "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-EPbnOKgFNdA%2FUYKY910IyjI%2FAAAAAAAAAZ0%2F9R7ZK6R1yqk%2Fs1600%2Ffor-whom-the-bell-tolls.jpg&f=1&nofb=1&ipt=70087b0110a227f7b96b7d2cb8d41697f80ee0b43830ad7dbe64ff7fa1235525&ipo=images",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not found");
+      });
+  });
+});

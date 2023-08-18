@@ -157,6 +157,20 @@ const insertComment = (author, body, article_id) => {
     });
 };
 
+const insertArticle = (author, title, body, topic, article_img_url) => {
+  if (!author || !title || !body || !topic || !article_img_url) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  return db
+    .query(
+      `INSERT INTO articles(author, title, body, topic, article_img_url) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [author, title, body, topic, article_img_url]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
 module.exports = {
   selectTopics,
   findArticle,
@@ -166,4 +180,5 @@ module.exports = {
   patchArticle,
   insertComment,
   checkTopic,
+  insertArticle,
 };
