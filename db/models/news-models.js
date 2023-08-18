@@ -181,12 +181,6 @@ const checkCommentID = (comment_id) => {
     });
 };
 
-const selectUsers = () => {
-  return db.query(`SELECT * FROM users;`).then((result) => {
-    return result.rows;
-  });
-};
-
 module.exports = {
   selectTopics,
   findArticle,
@@ -198,5 +192,4 @@ module.exports = {
   checkTopic,
   removeComment,
   checkCommentID,
-  selectUsers,
 };

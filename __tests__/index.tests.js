@@ -567,3 +567,27 @@ describe("FEATURE: GET /api/articles/:article_id ", () => {
       });
   });
 });
+
+describe("GET /api/users/:username", () => {
+  test("Returns a user object with the correct properties", () => {
+    return request(app)
+      .get("/api/users/lurker")
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+        expect(Object.keys(user)).toHaveLength(3);
+        expect(user).toHaveProperty("username", expect.any(String));
+        expect(user).toHaveProperty("name", expect.any(String));
+        expect(user).toHaveProperty("avatar_url", expect.any(String));
+      });
+  });
+  test("GET: 404 username does not exist and returns an error message", () => {
+    return request(app)
+      .get("/api/users/jaffacakes")
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not found");
+      });
+  });
+});
