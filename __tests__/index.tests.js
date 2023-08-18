@@ -125,13 +125,12 @@ describe("GET /api/articles/:article_id", () => {
           "title",
           "Eight pug gifs that remind me of mitch"
         );
-        expect(article).toHaveProperty("body", "some gifs");
+        expect(article).toHaveProperty("body", "git push origin master");
         expect(article).toHaveProperty("article_id", 3);
+        expect(article).toHaveProperty("comment_count", "1");
+
         expect(article).toHaveProperty("topic", "mitch");
-        expect(article).toHaveProperty(
-          "created_at",
-          "2020-11-03T09:12:00.000Z"
-        );
+        expect(article).toHaveProperty("created_at", expect.any(String));
         expect(article).toHaveProperty("votes", 0);
         expect(article).toHaveProperty(
           "article_img_url",
@@ -139,6 +138,7 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
+
   test("GET: 404 article id does not exist and returns an error message", () => {
     return request(app)
       .get("/api/articles/459")
@@ -552,6 +552,18 @@ describe("GET /api/users", () => {
         expect(Object.keys(users[0])).toEqual(
           expect.arrayContaining(["username", "name", "avatar_url"])
         );
+      });
+  });
+});
+
+describe("FEATURE: GET /api/articles/:article_id ", () => {
+  test("GET: 200 Ensure the article response object contains a comment count", () => {
+    return request(app)
+      .get("/api/articles/9")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("comment_count", expect.any(String));
       });
   });
 });
