@@ -83,7 +83,7 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("article_id", expect.any(Number));
           expect(article).toHaveProperty("topic", expect.any(String));
           expect(article).toHaveProperty("created_at", expect.any(String));
-          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("votes", expect.any(String));
           expect(article).toHaveProperty("article_img_url", expect.any(String));
           expect(article).toHaveProperty("comment_count", expect.any(String));
           expect(article).not.toHaveProperty("body");
@@ -396,7 +396,7 @@ describe("FEATURE: GET /api/articles (queries)", () => {
           expect(article).toHaveProperty("created_at", expect.any(String));
           expect(article).toHaveProperty("article_img_url", expect.any(String));
           expect(article).toHaveProperty("article_id", expect.any(Number));
-          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("votes", expect.any(String));
           expect(article).toHaveProperty("comment_count", expect.any(String));
           expect(Object.keys(article)).toHaveLength(8);
         });
@@ -433,7 +433,7 @@ describe("FEATURE: GET /api/articles (queries)", () => {
           expect(article).toHaveProperty("article_id", expect.any(Number));
           expect(article).toHaveProperty("topic", expect.any(String));
           expect(article).toHaveProperty("created_at", expect.any(String));
-          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("votes", expect.any(String));
           expect(article).toHaveProperty("article_img_url", expect.any(String));
           expect(article).toHaveProperty("comment_count", expect.any(String));
           expect(article).not.toHaveProperty("body");
@@ -455,7 +455,7 @@ describe("FEATURE: GET /api/articles (queries)", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toBeSortedBy("votes");
+        expect(articles).toBeSortedBy("votes", { coerce: true });
       });
   });
   test("GET: 200 sorts the articles by votes column and order is descending by default", () => {
@@ -464,7 +464,10 @@ describe("FEATURE: GET /api/articles (queries)", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toBeSortedBy("votes", { descending: true });
+        expect(articles).toBeSortedBy("votes", {
+          descending: true,
+          coerce: true,
+        });
       });
   });
   test("GET: 400 returns an error message if sort_by is unacceptable", () => {

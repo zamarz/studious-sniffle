@@ -103,7 +103,7 @@ const selectArticles = (
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
-  let baseSqlString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id `;
+  let baseSqlString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, COUNT(comment_id) AS comment_count, SUM(comments.votes) + SUM(articles.votes) AS votes FROM articles JOIN comments ON comments.article_id = articles.article_id `;
 
   if (topic) {
     baseSqlString += `WHERE topic = $1 `;
