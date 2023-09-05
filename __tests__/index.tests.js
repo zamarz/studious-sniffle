@@ -125,9 +125,9 @@ describe("GET /api/articles/:article_id", () => {
           "title",
           "Eight pug gifs that remind me of mitch"
         );
-        expect(article).toHaveProperty("body", "git push origin master");
+        expect(article).toHaveProperty("body", "some gifs");
         expect(article).toHaveProperty("article_id", 3);
-        expect(article).toHaveProperty("comment_count", "1");
+        expect(article).toHaveProperty("comment_count", "2");
 
         expect(article).toHaveProperty("topic", "mitch");
         expect(article).toHaveProperty("created_at", expect.any(String));

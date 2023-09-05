@@ -24,7 +24,7 @@ const selectTopics = (slug = null) => {
 const findArticle = (article_id) => {
   return db
     .query(
-      `SELECT *, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id, comments.comment_id;`,
+      `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.body, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;`,
       [article_id]
     )
     .then((result) => {
