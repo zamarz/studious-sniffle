@@ -36,12 +36,6 @@ const findArticle = (article_id) => {
     });
 };
 
-//  `SELECT *, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id WHERE comments.article_id = $1 GROUP BY articles.article_id, comments.comment_id;
-
-//SELECT *, COUNT(comments.comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id = 1 GROUP BY articles.article_id, comments.comment_id;
-
-// `SELECT *, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id, comments.comment_id;`,
-
 const findComments = (article_id, sort_by = "created_at", order = "desc") => {
   const acceptedSorts = ["created_at"];
   const acceptedOrders = ["asc", "desc"];
@@ -92,6 +86,7 @@ const selectArticles = (
     "votes",
     "article_id",
     "article_img_url",
+    "comment_count",
   ];
   const queryValues = [];
 
